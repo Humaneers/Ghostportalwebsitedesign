@@ -2,16 +2,9 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
-const normalizeBase = (value: string | undefined) => {
-  if (!value) return "/";
-  return value.endsWith("/") ? value : `${value}/`;
-};
-
-const basePrefix = normalizeBase(process.env.VITE_BASE_PATH ?? process.env.BASE_PATH);
-
 export default defineConfig({
   root: "apps/web-app",
-  base: `${basePrefix}app/`,
+  base: "/app/",
   plugins: [react()],
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx", ".json"],
