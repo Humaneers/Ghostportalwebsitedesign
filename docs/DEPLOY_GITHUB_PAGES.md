@@ -5,6 +5,7 @@ This repository builds a static home page at `/` and a Vite React app under `/ap
 ## 1) Enable GitHub Pages
 1. Go to **Settings → Pages** for the repository.
 2. Under **Build and deployment**, select **GitHub Actions** as the source.
+3. Ensure your default branch is **main** (the workflow triggers on `main`).
 
 ## 2) Configure the workflow
 This repo includes a GitHub Actions workflow at `.github/workflows/deploy-pages.yml` that:
