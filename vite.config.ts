@@ -11,7 +11,7 @@ const basePrefix = normalizeBase(process.env.VITE_BASE_PATH ?? process.env.BASE_
 
 export default defineConfig({
   root: "apps/web-app",
-  base: `${basePrefix}app/`,
+  base: basePrefix,
   plugins: [react()],
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx", ".json"],
@@ -60,8 +60,8 @@ export default defineConfig({
   },
   build: {
     target: "esnext",
-    outDir: "../../dist/app",
-    emptyOutDir: false,
+    outDir: "../../dist",
+    emptyOutDir: true,
   },
   server: {
     port: 3000,

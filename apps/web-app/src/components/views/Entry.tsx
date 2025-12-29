@@ -67,7 +67,7 @@ export const Entry: React.FC<EntryProps> = ({ onNext, onLogin, onReset, onColoph
     audience: 'External',
   });
   
-  const labels = ["CAPACITY", "VELOCITY", "ARTISTS", "LEADERS", "WORLD CHANGERS"];
+  const labels = ["CAPACITY", "VELOCITY", "ARCHITECTS", "COMMANDERS", "WORLD MAKERS"];
   
   // Scramble Effects
   const title1 = useScramble("Silence is the ultimate luxury.", introStage === 'TEXT');
@@ -182,7 +182,7 @@ export const Entry: React.FC<EntryProps> = ({ onNext, onLogin, onReset, onColoph
   `;
 
   return (
-    <PageTransition className="flex flex-col items-center justify-center min-h-screen p-8 text-center relative overflow-hidden">
+    <PageTransition className="flex flex-col items-center min-h-screen p-8 relative overflow-x-hidden">
       
       {/* Ghost Overlay */}
       <AnimatePresence>
@@ -207,14 +207,20 @@ export const Entry: React.FC<EntryProps> = ({ onNext, onLogin, onReset, onColoph
         {count.toLocaleString()} / 881
       </div>
 
-      <div className="max-w-4xl space-y-12 relative z-10">
-        <div className="h-[240px] flex flex-col items-center justify-center">
-        {isReturning ? (
-             <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="space-y-6"
-             >
+      <div className="w-full max-w-6xl space-y-16 relative z-10">
+        <section className="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] items-center">
+          <div className="space-y-6 text-left">
+            <div className="flex flex-wrap items-center gap-3 text-[10px] font-mono uppercase tracking-[0.3em] text-[#B87333]">
+              <span>The Third Sovereign</span>
+              <span className="text-[#1A1A1B]/40">•</span>
+              <span>The Centurions Society</span>
+            </div>
+            {isReturning ? (
+              <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="space-y-4"
+              >
                 <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl leading-tight text-[#1A1A1B]">
                   The Council is reviewing your frequency, {userName}.<br/>
                   <span className="italic text-[#B87333] text-3xl md:text-5xl block mt-4">The watch continues.</span>
@@ -228,69 +234,107 @@ export const Entry: React.FC<EntryProps> = ({ onNext, onLogin, onReset, onColoph
                     [ RESET SIGNAL ]
                   </button>
                 )}
-            </motion.div>
-          ) : (
-            introStage === 'OWL' ? (
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 1.1, filter: 'blur(10px)' }}
-                    transition={{ duration: 1 }}
-                    className="flex flex-col items-center justify-center"
-                >
-                    <pre className="font-mono text-[#B87333] text-sm md:text-base leading-none whitespace-pre animate-pulse">
-                        {OWL_ASCII}
-                    </pre>
-                </motion.div>
-            ) : (
-                <h1 className={`font-serif text-4xl md:text-6xl lg:text-7xl leading-tight text-[#1A1A1B] transition-all duration-100 ${glitchTitle ? 'opacity-50 blur-[2px] translate-x-1' : ''}`}>
-                    <span className="block mb-2">{title1}</span>
-                    <span className="italic text-[#B87333]">{title2}</span>
-                </h1>
-            )
-          )}
-        </div>
-
-        {!isReturning && (
-          <div className="h-24 w-full flex justify-center items-center">
-            {introStage === 'TEXT' && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.5, duration: 1 }}
-                className="flex flex-col items-center gap-6"
-              >
-                <div className="flex flex-wrap items-center justify-center gap-4">
-                  <button 
-                    onClick={onNext}
-                    className="group relative inline-flex items-center gap-3 px-8 py-4 bg-transparent border border-[#B87333] text-[#B87333] font-mono text-sm tracking-widest hover:bg-[#B87333] hover:text-[#F5F2ED] transition-all duration-500 uppercase overflow-hidden"
-                  >
-                    <span className="relative z-10">Request Consideration</span>
-                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 relative z-10" />
-                    <div className="absolute inset-0 bg-[#B87333] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
-                  </button>
-                  <a 
-                    href="#amenity-request"
-                    className="inline-flex items-center gap-2 px-6 py-3 border border-transparent text-[#1A1A1B] font-mono text-[10px] tracking-[0.3em] uppercase hover:text-[#B87333] transition-colors"
-                  >
-                    Request an Amenity
-                    <Eye className="w-3 h-3" />
-                  </a>
-                </div>
-                
-                <p className="font-mono text-[10px] text-[#1A1A1B]/30 uppercase tracking-[0.2em] opacity-0 animate-[fadeIn_3s_ease-in_2s_forwards]">
-                    The Third Sovereign is The Centurions Society.
-                </p>
               </motion.div>
+            ) : (
+              <>
+                {introStage === 'OWL' ? (
+                  <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 1.1, filter: 'blur(10px)' }}
+                      transition={{ duration: 1 }}
+                      className="flex flex-col items-start justify-center"
+                  >
+                      <pre className="font-mono text-[#B87333] text-sm md:text-base leading-none whitespace-pre animate-pulse">
+                          {OWL_ASCII}
+                      </pre>
+                  </motion.div>
+                ) : (
+                  <h1 className={`font-serif text-4xl md:text-6xl lg:text-7xl leading-tight text-[#1A1A1B] transition-all duration-100 ${glitchTitle ? 'opacity-50 blur-[2px] translate-x-1' : ''}`}>
+                      <span className="block mb-2">{title1}</span>
+                      <span className="italic text-[#B87333]">{title2}</span>
+                  </h1>
+                )}
+                <p className="text-base md:text-lg text-[#1A1A1B]/80 leading-relaxed max-w-2xl">
+                  Between the demands of Command and the intimacy of Domestic, a vacuum exists. The Third Sovereign
+                  is the sanctuary for the unburdened mind — an analog estate where attention is protected and
+                  quiet power can recover.
+                </p>
+              </>
             )}
           </div>
-        )}
+
+          <div className="border border-[#1A1A1B]/10 bg-white/70 p-6 md:p-8 space-y-6 text-left">
+            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#B87333]">Credibility Signals</p>
+            <div className="space-y-4">
+              <div>
+                <p className="font-serif text-2xl text-[#1A1A1B]">881 Membership Cap</p>
+                <p className="text-sm text-[#1A1A1B]/70">440 Local, 440 Global, and one ceremonial seat for the 1881 Spirit.</p>
+              </div>
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="border border-[#1A1A1B]/10 p-4">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#B87333]">Analog Standard</p>
+                  <p className="text-sm text-[#1A1A1B]/70">Faraday Protocol zones eliminate digital noise.</p>
+                </div>
+                <div className="border border-[#1A1A1B]/10 p-4">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#B87333]">Re-Chartered 2025</p>
+                  <p className="text-sm text-[#1A1A1B]/70">Founded 1881. Re-activated for the next century of builders.</p>
+                </div>
+              </div>
+            </div>
+            {!isReturning && (
+              <div className="flex flex-wrap items-center gap-4">
+                <button 
+                  onClick={onNext}
+                  className="group relative inline-flex items-center gap-3 px-8 py-4 bg-transparent border border-[#B87333] text-[#B87333] font-mono text-sm tracking-widest hover:bg-[#B87333] hover:text-[#F5F2ED] transition-all duration-500 uppercase overflow-hidden"
+                >
+                  <span className="relative z-10">Request Consideration</span>
+                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 relative z-10" />
+                  <div className="absolute inset-0 bg-[#B87333] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+                </button>
+                <a 
+                  href="#amenity-request"
+                  className="inline-flex items-center gap-2 px-4 py-2 border border-transparent text-[#1A1A1B] font-mono text-[10px] tracking-[0.3em] uppercase hover:text-[#B87333] transition-colors"
+                >
+                  Request an Amenity
+                  <Eye className="w-3 h-3" />
+                </a>
+              </div>
+            )}
+            <p className="font-mono text-[10px] text-[#1A1A1B]/30 uppercase tracking-[0.2em]">
+              The Third Sovereign is The Centurions Society.
+            </p>
+          </div>
+        </section>
+
+        <section className="grid gap-6 md:grid-cols-3">
+          {[
+            {
+              title: 'The Analog Standard',
+              detail: 'The only estate in the Southwest with Faraday Protocol zones for total cognitive quiet.',
+            },
+            {
+              title: 'The 1881 Cap',
+              detail: 'Membership secured by alignment, not volume. We curate clarity over crowd.',
+            },
+            {
+              title: 'The Craft',
+              detail: 'Zen of labor: vineyards and restoration workshops to reset the modern mind.',
+            },
+          ].map((signal) => (
+            <div key={signal.title} className="border border-[#1A1A1B]/10 p-6 space-y-3 bg-[#F5F2ED]/70">
+              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#B87333]">Signal</p>
+              <h3 className="font-serif text-2xl text-[#1A1A1B]">{signal.title}</h3>
+              <p className="text-sm text-[#1A1A1B]/80 leading-relaxed">{signal.detail}</p>
+            </div>
+          ))}
+        </section>
       </div>
 
-      <div className="w-full max-w-5xl mt-16 mb-32 px-4 sm:px-8 text-left space-y-16">
+      <div className="w-full max-w-5xl mt-16 mb-24 px-4 sm:px-8 text-left space-y-16">
         <section className="space-y-6">
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#B87333]">Public Manifesto</p>
-          <h2 className="font-serif text-3xl md:text-4xl text-[#1A1A1B]">The Sovereign Third, publicly known as The Third Sovereign.</h2>
+          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#B87333]">Anticipation Architecture</p>
+          <h2 className="font-serif text-3xl md:text-4xl text-[#1A1A1B]">The Third Sovereign is the public name of The Centurions Society.</h2>
           <div className="space-y-4 text-sm md:text-base text-[#1A1A1B]/80 leading-relaxed">
             <p>
               Between the demands of the Command and the intimacy of the Domestic, a vacuum exists. For the
@@ -346,11 +390,11 @@ export const Entry: React.FC<EntryProps> = ({ onNext, onLogin, onReset, onColoph
 
         <section className="space-y-6">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#B87333]">Coming Soon</p>
-              <h3 className="font-serif text-2xl text-[#1A1A1B]">Amenities in Anticipation</h3>
-            </div>
-            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#1A1A1B]/50">Public Teaser</span>
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#B87333]">Coming Soon</p>
+            <h3 className="font-serif text-2xl text-[#1A1A1B]">Amenities in Anticipation</h3>
+          </div>
+          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#1A1A1B]/50">Public Teaser</span>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             {[
@@ -377,21 +421,27 @@ export const Entry: React.FC<EntryProps> = ({ onNext, onLogin, onReset, onColoph
             </p>
           </div>
           <form onSubmit={handleAmenitySubmit} className="grid gap-4 md:grid-cols-2">
+            <label className="sr-only" htmlFor="amenity-name">Name</label>
             <input
+              id="amenity-name"
               type="text"
               placeholder="Name"
               value={amenityForm.name}
               onChange={(event) => setAmenityForm({ ...amenityForm, name: event.target.value })}
               className="border border-[#1A1A1B]/20 bg-transparent px-4 py-3 font-mono text-xs uppercase tracking-[0.2em] text-[#1A1A1B] focus:outline-none focus:border-[#B87333]"
             />
+            <label className="sr-only" htmlFor="amenity-email">Email (optional)</label>
             <input
+              id="amenity-email"
               type="email"
               placeholder="Email (optional)"
               value={amenityForm.email}
               onChange={(event) => setAmenityForm({ ...amenityForm, email: event.target.value })}
               className="border border-[#1A1A1B]/20 bg-transparent px-4 py-3 font-mono text-xs uppercase tracking-[0.2em] text-[#1A1A1B] focus:outline-none focus:border-[#B87333]"
             />
+            <label className="sr-only" htmlFor="amenity-audience">Audience</label>
             <select
+              id="amenity-audience"
               value={amenityForm.audience}
               onChange={(event) => setAmenityForm({ ...amenityForm, audience: event.target.value })}
               className="border border-[#1A1A1B]/20 bg-transparent px-4 py-3 font-mono text-xs uppercase tracking-[0.2em] text-[#1A1A1B] focus:outline-none focus:border-[#B87333]"
@@ -401,7 +451,9 @@ export const Entry: React.FC<EntryProps> = ({ onNext, onLogin, onReset, onColoph
               <option>Partner</option>
             </select>
             <div className="md:col-span-2">
+              <label className="sr-only" htmlFor="amenity-request">Amenity request</label>
               <textarea
+                id="amenity-request"
                 placeholder="Describe the amenity you want to see."
                 value={amenityForm.request}
                 onChange={(event) => setAmenityForm({ ...amenityForm, request: event.target.value })}
@@ -425,7 +477,7 @@ export const Entry: React.FC<EntryProps> = ({ onNext, onLogin, onReset, onColoph
         </section>
       </div>
 
-      <div className="absolute bottom-8 left-0 w-full text-center space-y-4 z-20">
+      <div className="mt-16 w-full text-center space-y-4 pb-8">
         <div 
             onClick={handleKnock}
             className="flex items-center justify-center gap-6 font-mono text-[10px] text-[#1A1A1B]/40 uppercase tracking-[0.2em] cursor-pointer select-none hover:text-[#B87333] transition-colors duration-300"
