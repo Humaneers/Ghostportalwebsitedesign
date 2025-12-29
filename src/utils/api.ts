@@ -1,49 +1,67 @@
-import { projectId, publicAnonKey } from './supabase/info';
+const getEnv = (key: string, defaultValue: string) => {
+  // @ts-ignore
+  if (typeof import.meta !== 'undefined' && import.meta.env) {
+    // @ts-ignore
+    return import.meta.env[key] || defaultValue;
+  }
+  try {
+    // @ts-ignore
+    if (typeof process !== 'undefined' && process.env) {
+       return process.env[key] || defaultValue;
+    }
+  } catch (e) {
+    // Ignore
+  }
+  return defaultValue;
+};
 
-const BASE_URL = `https://${projectId}.supabase.co/functions/v1/make-server-dbb49771`;
+const SUPABASE_URL = getEnv('VITE_SUPABASE_URL', 'https://placeholder.supabase.co');
+const SUPABASE_KEY = getEnv('VITE_SUPABASE_ANON_KEY', 'placeholder-key');
+
+// Helper to handle both local dev mocks and real edge functions
+async function fetchEdge<T>(functionName: string, body: any): Promise<T> {
+  // STUB: In a real deploy, this calls the edge function.
+  // For the public repo publish state, we mock the responses if no backend is reachable
+  // or just return success to allow UI traversal.
+  
+  console.log(`[API STUB] Calling ${functionName}`, body);
+  
+  // Simulate network delay
+  await new Promise(r => setTimeout(r, 800));
+
+  // Return mock data based on function
+  if (functionName === 'bond-eligibility') {
+    return { allowed: true, applicationId: 'mock-app-id' } as any;
+  }
+  
+  return { success: true } as any;
+}
 
 export const api = {
-  getStats: async () => {
-    try {
-      const res = await fetch(`${BASE_URL}/sovereign/stats`, {
-        headers: {
-          'Authorization': `Bearer ${publicAnonKey}`
-        }
-      });
-      return await res.json();
-    } catch (e) {
-      console.error(e);
-      return { count: 542 };
-    }
+  applicationInit: async () => {
+    return fetchEdge('application-init', {});
   },
-  incrementCount: async () => {
-    try {
-      const res = await fetch(`${BASE_URL}/sovereign/increment`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${publicAnonKey}`
-        }
-      });
-      return await res.json();
-    } catch (e) {
-      console.error(e);
-      return { count: 543 };
-    }
+  applicationEvent: async (event: string, data?: any) => {
+    return fetchEdge('application-event', { event, data });
   },
-  submitContact: async (data: { alias: string; contact: string; intent: string }) => {
-    try {
-      const res = await fetch(`${BASE_URL}/sovereign/contact`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${publicAnonKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
-      return await res.json();
-    } catch (e) {
-      console.error(e);
-      return { success: false };
-    }
+  transmissionSubmit: async (data: any) => {
+    return fetchEdge('transmission-submit', data);
+  },
+  bondEligibility: async (token: string) => {
+    return fetchEdge<{ allowed: boolean; applicationId: string }>('bond-eligibility', { token });
+  },
+  stripeCheckout: async (applicationId: string) => {
+    // STUB: Returns a fake checkout URL
+    console.log('[API STUB] Creating Stripe session for', applicationId);
+    return { url: '/app/payment-received' }; 
+  },
+  applicationStatus: async (id: string) => {
+    return fetchEdge('application-status', { id });
+  },
+  memberAuth: async (id: string, key: string) => {
+    return fetchEdge('member-auth', { id, key });
+  },
+  portalMe: async () => {
+    return fetchEdge('portal-me', {});
   }
 };

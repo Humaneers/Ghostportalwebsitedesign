@@ -2,16 +2,16 @@ import React from 'react';
 import { PageTransition } from '../layout/PageTransition';
 import { ArrowLeft } from 'lucide-react';
 
-interface ColophonProps {
-  onBack: () => void;
-}
+import { useNavigate } from 'react-router-dom';
 
-export const Colophon: React.FC<ColophonProps> = ({ onBack }) => {
+export const Colophon: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <PageTransition className="flex flex-col items-center justify-center min-h-screen p-8 text-center relative overflow-hidden bg-[#F5F2ED]">
       <div className="max-w-2xl w-full space-y-12 text-left">
         <button 
-          onClick={onBack}
+          onClick={() => navigate(-1)}
           className="group flex items-center gap-2 font-mono text-xs text-[#1A1A1B]/40 uppercase tracking-widest hover:text-[#B87333] transition-colors"
         >
           <ArrowLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />

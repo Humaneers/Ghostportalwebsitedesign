@@ -1,151 +1,93 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Routes, Route, Navigate, useLocation, BrowserRouter } from 'react-router-dom';
 import { MainLayout } from './components/layout/MainLayout';
-import { Entry } from './components/views/Entry';
-import { Protocol } from './components/views/Protocol';
-import { Contact } from './components/views/Contact';
-import { Bond } from './components/views/Bond';
-import { Referral } from './components/views/Referral';
-import { Login } from './components/views/Login';
-import { Colophon } from './components/views/Colophon';
 import { AnimatePresence } from 'motion/react';
 
-type AppState = 'ENTRY' | 'PROTOCOL' | 'CONTACT' | 'BOND' | 'REFERRAL' | 'COMPLETE' | 'LOGIN' | 'COLOPHON';
+// Views
+import { Estate } from './components/views/Estate';
+import { Protocol } from './components/views/Protocol';
+import { Intent } from './components/views/Intent';
+import { Transmission } from './components/views/Transmission';
+import { TransmissionReceived } from './components/views/TransmissionReceived';
+import { Access } from './components/views/Access';
+import { Bond } from './components/views/Bond';
+import { PaymentReceived } from './components/views/PaymentReceived';
+import { Portal } from './components/views/Portal';
 
-export default function App() {
-  const [currentState, setCurrentState] = useState<AppState>('ENTRY');
-  const [userName, setUserName] = useState<string>('');
-  const [isReturning, setIsReturning] = useState(false);
-  const [isDevMode, setIsDevMode] = useState(false);
+// Legacy views (mapped or unused, kept for safety)
+import { Login } from './components/views/Login'; 
+import { Colophon } from './components/views/Colophon';
 
+// Safe Env Access
+const getEnv = (key: string, defaultValue: string) => {
+  // @ts-ignore
+  if (typeof import.meta !== 'undefined' && import.meta.env) {
+    // @ts-ignore
+    return import.meta.env[key] || defaultValue;
+  }
+  return defaultValue;
+};
+
+const AppContent = () => {
+  const location = useLocation();
+  const [theme, setTheme] = useState<'hearth' | 'shadow'>('hearth');
+
+  // Theme Switching Logic based on route
   useEffect(() => {
-    // Check for returning user
-    const status = localStorage.getItem('sovereign_status');
-    const storedName = localStorage.getItem('sovereign_user');
-    
-    if (status && (status === 'bond_posted' || status === 'complete')) {
-      setIsReturning(true);
-      if (storedName) setUserName(storedName);
+    const path = location.pathname;
+    if (path.includes('/access') || path.includes('/portal') || path.includes('/bond')) {
+      setTheme('shadow');
+    } else {
+      setTheme('hearth'); // Default to hearth for estate, protocol, intent, transmission
     }
-  }, []);
-
-  const handleEntryNext = () => {
-    // Allow proceeding to Protocol regardless of returning status
-    // The "isReturning" state mainly affects the greeting on the Entry page
-    setCurrentState('PROTOCOL');
-  };
-
-  const handleLoginRequest = () => {
-    setCurrentState('LOGIN');
-  };
-
-  const handleProtocolComplete = () => {
-    setCurrentState('CONTACT');
-  };
-
-  const handleContactComplete = () => {
-    setCurrentState('BOND');
-  };
-
-  const handleBondComplete = (name: string) => {
-    setUserName(name);
-    localStorage.setItem('sovereign_user', name);
-    localStorage.setItem('sovereign_status', 'bond_posted');
-    setCurrentState('REFERRAL');
-  };
-
-  const handleReferralComplete = () => {
-    localStorage.setItem('sovereign_status', 'complete');
-    setIsReturning(true);
-    // After completion, go back to entry to show the "Watch continues" message
-    setCurrentState('ENTRY');
-  };
-
-  const handleBypass = () => {
-    // Legacy bypass
-    setIsDevMode(true);
-  };
-
-  const handleToggleDevMode = () => {
-    setIsDevMode(prev => !prev);
-  };
-
-  const handleHome = () => {
-    setCurrentState('ENTRY');
-  };
-
-  const handleReset = () => {
-    localStorage.removeItem('sovereign_status');
-    localStorage.removeItem('sovereign_user');
-    setIsReturning(false);
-    setUserName('');
-    setCurrentState('ENTRY');
-  };
+  }, [location]);
 
   return (
-    <MainLayout 
-      onBypass={handleBypass} 
-      onHome={handleHome} 
-      isDevMode={isDevMode} 
-      onToggleDevMode={handleToggleDevMode}
-    >
+    <MainLayout theme={theme}>
       <AnimatePresence mode="wait">
-        {currentState === 'ENTRY' && (
-          <Entry 
-            key="entry" 
-            onNext={handleEntryNext} 
-            onLogin={handleLoginRequest}
-            onReset={handleReset}
-            onColophon={() => setCurrentState('COLOPHON')}
-            isReturning={isReturning}
-            isDevMode={isDevMode}
-            userName={userName || 'Candidate'}
-          />
-        )}
-        
-        {currentState === 'LOGIN' && (
-          <Login 
-            key="login"
-            onIntake={() => setCurrentState('ENTRY')}
-          />
-        )}
+        <Routes location={location} key={location.pathname}>
+          {/* Redirect root of SPA to Estate or appropriate start */}
+          <Route path="/" element={<Navigate to="/estate" replace />} />
+          
+          {/* Funnel */}
+          <Route path="/estate" element={<Estate />} />
+          <Route path="/protocol" element={<Protocol />} />
+          <Route path="/intent" element={<Intent />} />
+          <Route path="/transmission" element={<Transmission />} />
+          <Route path="/transmission-received" element={<TransmissionReceived />} />
+          
+          {/* Member / Shadow Paths */}
+          <Route path="/access" element={<Access />} />
+          <Route path="/bond" element={<Bond />} />
+          <Route path="/payment-received" element={<PaymentReceived />} />
+          <Route path="/portal/*" element={<Portal />} />
+          
+          {/* Legacy / Utilities */}
+          <Route path="/login" element={<Navigate to="/access" replace />} />
+          <Route path="/colophon" element={<Colophon />} />
 
-        {currentState === 'COLOPHON' && (
-          <Colophon 
-            key="colophon"
-            onBack={() => setCurrentState('ENTRY')}
-          />
-        )}
-        
-        {currentState === 'PROTOCOL' && (
-          <Protocol 
-            key="protocol" 
-            onNext={handleProtocolComplete} 
-          />
-        )}
-
-        {currentState === 'CONTACT' && (
-          <Contact 
-            key="contact" 
-            onNext={handleContactComplete} 
-            isDevMode={isDevMode}
-          />
-        )}
-        
-        {currentState === 'BOND' && (
-          <Bond 
-            key="bond" 
-            onNext={handleBondComplete} 
-            isDevMode={isDevMode}
-          />
-        )}
-        
-        {currentState === 'REFERRAL' && (
-          <Referral 
-            key="referral" 
-            onComplete={handleReferralComplete} 
-          />
-        )}
+          {/* Catch-all */}
+          <Route path="*" element={<Navigate to="/estate" replace />} />
+        </Routes>
       </AnimatePresence>
     </MainLayout>
+  );
+};
+
+export default function App() {
+  const envBasePath = getEnv('BASE_URL', '/app/');
+  
+  // Determine if the current location actually matches the configured base path.
+  // This prevents crashing in dev/preview environments where the app might be served from root '/'
+  // even though production expects '/app/'.
+  const effectiveBasename = 
+    typeof window !== 'undefined' && window.location.pathname.startsWith(envBasePath)
+      ? envBasePath
+      : '/';
+
+  return (
+    <BrowserRouter basename={effectiveBasename}>
+      <AppContent />
+    </BrowserRouter>
   );
 }
