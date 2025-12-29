@@ -13,8 +13,7 @@ const viteBin = path.join(
   process.platform === "win32" ? "vite.cmd" : "vite"
 );
 
-const redirectsContent =
-  "/app/index.html  /app/index.html  200\n/app/*  /app/index.html  200\n";
+const redirectsContent = "/app/*  /app/index.html  200\n";
 
 const headersContent = `/*
   X-Content-Type-Options: nosniff
