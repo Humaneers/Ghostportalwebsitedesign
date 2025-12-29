@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirecting…</title>
+    <meta http-equiv="refresh" content="0; url=./" />
+  </head>
+  <body>
+    <script>
+      const path = window.location.pathname;
+      const segments = path.split("/").filter(Boolean);
+      const base = segments.length > 0 ? `/${segments[0]}/` : "/";
+      const appBase = `${base}app/`;
+
+      if (path.startsWith(appBase)) {
+        window.location.replace(`${appBase}index.html`);
+      } else {
+        window.location.replace(base);
+      }
+    </script>
+  </body>
+</html>
