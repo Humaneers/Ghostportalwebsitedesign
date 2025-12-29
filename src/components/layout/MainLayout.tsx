@@ -21,7 +21,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
   React.useEffect(() => {
     // Easter egg for console explorers
     console.log(
-      "%c THE THIRD SOVEREIGN \n %c You have looked behind the veil. \n We are looking for those with your curiosity. \n Begin intake: %c /?origin=console_protocol ",
+      "%c THE SOVEREIGN THIRD \n %c You have looked behind the veil. \n We are looking for those with your curiosity. \n Begin intake: %c /?origin=console_protocol ",
       "background: #1A1A1B; color: #B87333; font-size: 24px; padding: 10px; font-family: monospace;",
       "background: #1A1A1B; color: #F5F2ED; font-size: 14px; padding: 5px; font-family: monospace;",
       "background: #B87333; color: #1A1A1B; font-size: 14px; padding: 5px; font-weight: bold; font-family: monospace;"
@@ -118,7 +118,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
         {`
           <!-- 
           ============================================================
-           THE THIRD SOVEREIGN GATEWAY
+           THE SOVEREIGN THIRD GATEWAY
           ============================================================
           
            Subject: UNKNOWN
